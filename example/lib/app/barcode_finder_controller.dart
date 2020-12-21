@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:mime/mime.dart';
 import 'package:barcode_finder/barcode_finder.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mime/mime.dart';
 
 abstract class BarcodeFinderState {}
 
@@ -27,11 +27,8 @@ class BarcodeFinderController extends ChangeNotifier {
   void scanFile(File file) async {
     _emit(BarcodeFinderLoading());
     try {
-      if (isImageFile(file.path)) {
-        final barcode = await _barcodeFinder.scanImage(filePath: file.path);
-        _update(barcode);
-      } else if (isPdfFile(file.path)) {
-        final barcode = await _barcodeFinder.scanPDF(filePath: file.path);
+      if (isImageFile(file.path) || isPdfFile(file.path)) {
+        final barcode = await _barcodeFinder.scanFile(filePath: file.path);
         _update(barcode);
       } else {
         _emit(BarcodeFinderError('File type not supported.'));

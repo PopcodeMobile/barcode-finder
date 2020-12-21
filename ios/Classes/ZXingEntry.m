@@ -22,18 +22,17 @@
         hints.tryHarder = YES;
         [hints addPossibleFormat:kBarcodeFormatCodabar];
         [hints addPossibleFormat:kBarcodeFormatQRCode];
+        [hints addPossibleFormat:kBarcodeFormatMaxiCode];
+        [hints addPossibleFormat:kBarcodeFormatDataMatrix];
         [hints addPossibleFormat:kBarcodeFormatITF];
         [hints addPossibleFormat:kBarcodeFormatEan8];
         [hints addPossibleFormat:kBarcodeFormatEan13];
         [hints addPossibleFormat:kBarcodeFormatCode128];
         [hints addPossibleFormat:kBarcodeFormatCode93];
         [hints addPossibleFormat:kBarcodeFormatCode39];
+        hints.pureBarcode = NO;
 
-
-
-         hints.pureBarcode = NO;
-
-    ZXMultiFormatOneDReader *reader = [[ZXMultiFormatOneDReader alloc] initWithHints:hints];
+    ZXMultiFormatReader *reader = [ZXMultiFormatReader reader];
     
     ZXResult *result = [reader decode:bitmap
                                 hints:hints
