@@ -13,7 +13,6 @@ abstract class BarcodeFinder {
   }) async {
     try {
       final listFormats = _conventFormatsToList(formats);
-      print(listFormats);
       Map<String, dynamic> arguments = {
         "filePath": path,
         "barcodeFormats": listFormats,

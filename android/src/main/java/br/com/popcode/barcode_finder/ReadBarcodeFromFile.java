@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
-//import java.util.Vector;
 
 public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
 
@@ -64,7 +63,7 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                 }
                 if (bitmap != null) {
                     String code = scanImage(bitmap, new MultiFormatReader());
-                    if (code != null && !code.isEmpty() && code.length() >= 44) {
+                    if (code != null && !code.isEmpty()) {
                         return code;
                     }
                 }
@@ -127,7 +126,6 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                     hints.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.allOf(BarcodeFormat.class));
                     hints.put(DecodeHintType.PURE_BARCODE, Boolean.FALSE);
                     Result result = reader.decode(bitmap, hints);
-                    BarcodeFormat.
                     if (barcodeFormats.isEmpty() || barcodeFormats.contains(result.getBarcodeFormat().toString())) {
                         contents = result.getText();
                     }
