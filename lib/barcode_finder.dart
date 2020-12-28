@@ -9,26 +9,25 @@ abstract class BarcodeFinder {
 
   static Future<String> scanFile({
     @required String path,
-    List<BarcodeFormat> formats = const [BarcodeFormat.ALL_FORMATS],
+    List<BarcodeFormat> formats = const [],
   }) async {
     try {
-      final list = _conventFormatsToList(formats);
+      final listFormats = _conventFormatsToList(formats);
+      print(listFormats);
+      Map<String, dynamic> arguments = {
+        "filePath": path,
+        "barcodeFormats": listFormats,
+      };
       if (path.endsWith('.pdf')) {
-        return _channel.invokeMethod(
-          'scan_pdf',
-          [path, list],
-        );
+        return _channel.invokeMethod('scan_pdf', arguments);
       }
-      return _channel.invokeMethod(
-        'scan_image',
-        [path, list],
-      );
+      return _channel.invokeMethod('scan_image', arguments);
     } catch (e) {
       throw Exception();
     }
   }
 
   static List<String> _conventFormatsToList(List<BarcodeFormat> formats) {
-    return formats.map((format) => format.toString()).toList();
+    return formats.map((format) => format.toString().split('.').last).toList();
   }
 }

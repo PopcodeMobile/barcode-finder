@@ -22,6 +22,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
@@ -37,12 +38,14 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
     private boolean outOfMemoryError = false;
     private final OnBarcodeReceivedListener listener;
     private EntryType entryType;
+    private ArrayList barcodeFormats;
 
-    ReadBarcodeFromFile(OnBarcodeReceivedListener listener, Context context, Uri filePath, EntryType entryType) {
+    ReadBarcodeFromFile(OnBarcodeReceivedListener listener, Context context, Uri filePath, EntryType entryType, ArrayList barcodeFormats) {
         this.listener = listener;
         this.context = context;
         this.filePath = filePath;
         this.entryType = entryType;
+        this.barcodeFormats = barcodeFormats;
     }
 
     @Override
@@ -60,7 +63,7 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                     bitmap = BitmapFactory.decodeFile(filePath.getPath());
                 }
                 if (bitmap != null) {
-                    String code = scanQRImage(bitmap, new MultiFormatReader());
+                    String code = scanImage(bitmap, new MultiFormatReader());
                     if (code != null && !code.isEmpty() && code.length() >= 44) {
                         return code;
                     }
@@ -110,7 +113,7 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
         return null;
     }
 
-    private String scanQRImage(Bitmap bMap, Reader reader) {
+    private String scanImage(Bitmap bMap, Reader reader) {
         String contents = null;
         try {
             if (!outOfMemoryError) {
@@ -119,22 +122,15 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                 LuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                 try {
-                    //Vector<BarcodeFormat> barcodeFormats = new Vector<>();
-                    //barcodeFormats.add(BarcodeFormat.QR_CODE);
-                    //barcodeFormats.add(BarcodeFormat.CODABAR);
                     Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
                     hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
                     hints.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.allOf(BarcodeFormat.class));
                     hints.put(DecodeHintType.PURE_BARCODE, Boolean.FALSE);
                     Result result = reader.decode(bitmap, hints);
-                    /*
-                    BarcodeType barcodeType;
-                    if (result.getBarcodeFormat() == BarcodeFormat.QR_CODE)
-                        barcodeType = BarcodeType.QRCODE;
-                    else
-                        barcodeType = BarcodeType.BARCODE;
-                        */
-                    contents = result.getText();
+                    BarcodeFormat.
+                    if (barcodeFormats.isEmpty() || barcodeFormats.contains(result.getBarcodeFormat().toString())) {
+                        contents = result.getText();
+                    }
                 } catch (Exception e) {
                     Log.e("BarcodeTest", "Error decoding barcode", e);
                 }

@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
                     _text('${state.message}')
                   else if (state is BarcodeFinderSuccess)
                     _text('${state.code}'),
-                  _startScanFilleButton(state),
+                  _startScanFileButton(state),
                   _startCameraButton(state),
                 ],
               );
@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget _startScanFilleButton(BarcodeFinderState state) {
+  Widget _startScanFileButton(BarcodeFinderState state) {
     return RaisedButton(
       child: Text('Scan PDF or image file'),
       onPressed: state is! BarcodeFinderLoading

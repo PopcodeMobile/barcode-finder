@@ -2,10 +2,13 @@ package br.com.popcode.barcode_finder;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -20,17 +23,19 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, final @NonNull MethodChannel.Result result) {
-        String filePath = (String) call.arguments;
+        HashMap<String, Object> arguments = (HashMap<String, Object>) call.arguments;
+        String filePath = (String) arguments.get("filePath");
+        ArrayList barcodeFormats = (ArrayList) arguments.get("barcodeFormats");
         if (call.method.equals("scan_pdf")) {
-            scanFile(result, filePath, EntryType.PDF);
+            scanFile(result, filePath, EntryType.PDF, barcodeFormats);
         } else if (call.method.equals("scan_image")) {
-            scanFile(result, filePath, EntryType.IMAGE);
+            scanFile(result, filePath, EntryType.IMAGE, barcodeFormats);
         } else {
             result.notImplemented();
         }
     }
 
-    private void scanFile(final @NonNull MethodChannel.Result result, String filePath, EntryType entryType) {
+    private void scanFile(final @NonNull MethodChannel.Result result, String filePath, EntryType entryType, ArrayList barcodeFormats) {
         File file = new File(filePath);
         Uri uri = Uri.fromFile(file);
         ReadBarcodeFromFile readBarcodeFromFile = new ReadBarcodeFromFile(new OnBarcodeReceivedListener() {
@@ -48,7 +53,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             public void onOutOfMemory() {
                 result.error("out-of-memory", "Out of memory", "");
             }
-        }, context, uri, entryType);
+        }, context, uri, entryType, barcodeFormats);
         readBarcodeFromFile.execute();
     }
 }

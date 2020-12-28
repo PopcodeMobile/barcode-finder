@@ -29,7 +29,7 @@ class BarcodeFinderController extends ChangeNotifier {
       if (isImageFile(file.path) || isPdfFile(file.path)) {
         final barcode = await BarcodeFinder.scanFile(
           path: file.path,
-          formats: [BarcodeFormat.ALL_FORMATS],
+          formats: [BarcodeFormat.CODABAR],
         );
         _update(barcode);
       } else {

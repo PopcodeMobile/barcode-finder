@@ -1,9 +1,9 @@
 enum BarcodeFormat {
-  ALL_FORMATS,
   UPC_A,
   UPC_E,
   EAN_8,
   EAN_13,
+  UPC_EAN_EXTENSION,
   CODE_39,
   CODE_93,
   CODE_128,
@@ -12,8 +12,8 @@ enum BarcodeFormat {
   QR_CODE,
   DATA_MATRIX,
   AZTEC,
-  PDF417,
-  MAXI_CODE,
+  PDF_417,
+  MAXICODE,
   RSS_14,
   RSS_EXPANDED
 }
