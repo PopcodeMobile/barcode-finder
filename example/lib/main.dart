@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'App de exemplo',
+            'Barcode Finder',
           ),
         ),
         body: Center(
@@ -44,7 +44,8 @@ class _MyAppState extends State<MyApp> {
                     _text('${state.message}')
                   else if (state is BarcodeFinderSuccess)
                     _text('${state.code}'),
-                  _button(state),
+                  _startScanFilleButton(state),
+                  _startCameraButton(state),
                 ],
               );
             },
@@ -54,9 +55,9 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget _button(BarcodeFinderState state) {
+  Widget _startScanFilleButton(BarcodeFinderState state) {
     return RaisedButton(
-      child: Text('Carregar PDF ou Imagem'),
+      child: Text('Scan PDF or image file'),
       onPressed: state is! BarcodeFinderLoading
           ? () async {
               final result = await FilePicker.platform.pickFiles();
@@ -66,6 +67,13 @@ class _MyAppState extends State<MyApp> {
               }
             }
           : null,
+    );
+  }
+
+  Widget _startCameraButton(BarcodeFinderState state) {
+    return RaisedButton(
+      child: Text('Scan using camera'),
+      onPressed: state is! BarcodeFinderLoading ? () async {} : null,
     );
   }
 
