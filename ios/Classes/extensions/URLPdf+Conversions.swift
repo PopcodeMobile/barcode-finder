@@ -7,24 +7,43 @@
 
 import Foundation
 extension URL {
-
-    func pdfToUIImage(scaleFactor scale:CGFloat = 1.0, pdfPage: Int = 1) -> UIImage? {
+    
+    func pdfPagesToImages(scaleFactor scale:CGFloat = 4.17) -> Array<UIImage>? {
         guard let document = CGPDFDocument(self as CFURL) else { return nil }
-        guard let page = document.page(at: pdfPage) else { return nil }
+        guard let page = document.page(at: 1) else { return nil }
+        let page2 = document.page(at: 2)
         
-        let pageRect = page.getBoxRect(.mediaBox)
-        
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: pageRect.size.width * scale, height: pageRect.size.height * scale))
-        let img1 = renderer.pngData( actions: { cnv in
-            UIColor.white.set()
-            
-            cnv.fill(pageRect)
-            cnv.cgContext.translateBy(x: 0.0, y: pageRect.size.height);
-            cnv.cgContext.scaleBy(x: scale, y: -scale);
-            cnv.cgContext.drawPDFPage(page);
+        let page1Image = createUIImageFrom(pdfPage: page, scale: scale)
+        let page2Image = createUIImageFrom(pdfPage: page2, scale: scale)
+        if page2Image == nil{
+            return [page1Image!]
 
-                })
-            let img2 = UIImage(data: img1)
-            return img2
+        }
+        return [page1Image!, page2Image!]
+
+        
     }
+    
+    
+    private func createUIImageFrom(pdfPage: CGPDFPage?, scale: CGFloat) -> UIImage?{
+        if pdfPage == nil {
+            return nil
+        }
+        let pageRect = pdfPage!.getBoxRect(.mediaBox)
+
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: pageRect.size.width * scale, height: pageRect.size.height * scale))
+        let img = renderer.jpegData(withCompressionQuality: 1.0 ,actions: { cnv in
+            cnv.cgContext.saveGState()
+            UIColor.white.set()
+            cnv.fill(pageRect)
+            cnv.cgContext.translateBy(x: 0.0, y: pageRect.size.height * scale);
+            cnv.cgContext.scaleBy(x: scale, y: -scale);
+            cnv.cgContext.concatenate(pdfPage!.getDrawingTransform(.mediaBox, rect: pageRect, rotate: 0, preserveAspectRatio: true))
+            cnv.cgContext.drawPDFPage(pdfPage!);
+            cnv.cgContext.restoreGState()
+        })
+        
+        return UIImage(data: img)
+    }
+    
 }
