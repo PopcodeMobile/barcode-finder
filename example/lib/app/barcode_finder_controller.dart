@@ -20,15 +20,13 @@ class BarcodeFinderError extends BarcodeFinderState {
 }
 
 class BarcodeFinderController extends ChangeNotifier {
-  final _barcodeFinder = BarcodeFinder();
-
   BarcodeFinderState state = BarcodeFinderInitial();
 
   void scanFile(File file) async {
     _emit(BarcodeFinderLoading());
     try {
       if (isImageFile(file.path) || isPdfFile(file.path)) {
-        final barcode = await _barcodeFinder.scanFile(filePath: file.path);
+        final barcode = await BarcodeFinder.scanFile(path: file.path);
         _update(barcode);
       } else {
         _emit(BarcodeFinderError('File type not supported.'));
