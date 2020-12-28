@@ -1,6 +1,7 @@
 PODS:
   - barcode_finder (0.0.1):
     - Flutter
+    - ZBarSDK (~> 1.3.1)
     - ZXingObjC (~> 3.6.4)
   - DKImagePickerController/Core (4.3.2):
     - DKImagePickerController/ImageDataManager
@@ -37,10 +38,11 @@ PODS:
     - DKImagePickerController/PhotoGallery
     - Flutter
   - Flutter (1.0.0)
-  - SDWebImage (5.9.5):
-    - SDWebImage/Core (= 5.9.5)
-  - SDWebImage/Core (5.9.5)
+  - SDWebImage (5.10.0):
+    - SDWebImage/Core (= 5.10.0)
+  - SDWebImage/Core (5.10.0)
   - SwiftyGif (5.3.0)
+  - ZBarSDK (1.3.1)
   - ZXingObjC (3.6.5):
     - ZXingObjC/All (= 3.6.5)
   - ZXingObjC/All (3.6.5)
@@ -56,6 +58,7 @@ SPEC REPOS:
     - DKPhotoGallery
     - SDWebImage
     - SwiftyGif
+    - ZBarSDK
     - ZXingObjC
 
 EXTERNAL SOURCES:
@@ -67,13 +70,14 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  barcode_finder: 966dd20d7afba53626893ea58b9cba0a97972b59
+  barcode_finder: f74d461a66da0c64f1b646a56990cfb18bc3c903
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
+  SDWebImage: 9169792e9eec3e45bba2a0c02f74bf8bd922d1ee
   SwiftyGif: e466e86c660d343357ab944a819a101c4127cb40
+  ZBarSDK: 4c1b5daeb7d6cc67dc9355e690af0230a661f6ec
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: 8375015bdb86d709a973bbf0a24dbaae287770c1
