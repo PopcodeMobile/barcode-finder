@@ -4,7 +4,7 @@ A barcode scanner that works on both iOS and Android. Provides functionality for
 It uses Zxing on Android and Zxing+Zbar on iOS.
 
 ---
-<img src="https://bloclibrary.dev/assets/gifs/flutter_counter.gif" width="200"/>
+<img src="https://github.com/PopcodeMobile/barcode-finder/blob/feature/scan-file/example/barcodefinder.gif" width="200"/>
 
 ## Usage
 
