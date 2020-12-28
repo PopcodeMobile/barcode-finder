@@ -1,15 +1,16 @@
-# barcode_finder
 
-A new flutter plugin project.
 
-## Getting Started
+A barcode scanner that works on both iOS and Android. Provides functionality for scanning 1D and 2D barcodes.
+It uses Zxing on Android and Zxing+Zbar on iOS.
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+---
+<img src="https://bloclibrary.dev/assets/gifs/flutter_counter.gif" width="200"/>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
+
+Lets take a look at how to use `BarcodeFinder` to scan any PDF or image `File`.
+```dart
+// File file = ... 
+final String barcode =  await _barcodeFinder.scanFile(filePath: file.path);
+```
 
