@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Código lido:',
+                    'Code:',
                     textAlign: TextAlign.center,
                   ),
                   if (state is BarcodeFinderLoading)
