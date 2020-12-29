@@ -7,6 +7,8 @@ import 'package:meta/meta.dart';
 abstract class BarcodeFinder {
   static const _channel = const MethodChannel('barcode_finder');
 
+  /// If [formats] parameter is an empty list
+  /// it will scan for all possible formats
   static Future<String> scanFile({
     @required String path,
     List<BarcodeFormat> formats = const [],
