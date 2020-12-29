@@ -3,7 +3,7 @@ import UIKit
 
 public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "barcode_finder", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "popcode.com.br/barcode_finder", binaryMessenger: registrar.messenger())
         let instance = SwiftBarcodeFinderPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
