@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:barcode_finder/barcode_finder.dart';
 import 'package:barcode_finder_example/app/barcode_finder_controller.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,11 @@ class _MyAppState extends State<MyApp> {
   Widget _startCameraButton(BarcodeFinderState state) {
     return RaisedButton(
       child: Text('Scan using camera'),
-      onPressed: state is! BarcodeFinderLoading ? () async {} : null,
+      onPressed: state is! BarcodeFinderLoading
+          ? () async {
+              BarcodeFinder.scanCamera();
+            }
+          : null,
     );
   }
 

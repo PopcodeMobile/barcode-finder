@@ -12,7 +12,7 @@ public class BarcodeFinderPlugin implements FlutterPlugin {
     private MethodChannel channel;
 
     private void registerPlugin(Context context, BinaryMessenger messenger) {
-        channel = new MethodChannel(messenger, "barcode_finder");
+        channel = new MethodChannel(messenger, "popcode.com.br/barcode_finder");
         setMethodCallHandler(context);
     }
 

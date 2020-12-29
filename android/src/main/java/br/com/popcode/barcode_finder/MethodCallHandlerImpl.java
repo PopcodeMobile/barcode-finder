@@ -1,6 +1,7 @@
 package br.com.popcode.barcode_finder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
@@ -23,13 +24,22 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, final @NonNull MethodChannel.Result result) {
-        HashMap<String, Object> arguments = (HashMap<String, Object>) call.arguments;
-        String filePath = (String) arguments.get("filePath");
-        ArrayList barcodeFormats = (ArrayList) arguments.get("barcodeFormats");
+        ArrayList barcodeFormats = null;
+        String filePath = null;
+        if (call.arguments != null) {
+            HashMap<String, Object> arguments = (HashMap<String, Object>) call.arguments;
+            filePath = (String) arguments.get("filePath");
+            barcodeFormats = (ArrayList) arguments.get("barcodeFormats");
+        }
         if (call.method.equals("scan_pdf")) {
             scanFile(result, filePath, EntryType.PDF, barcodeFormats);
         } else if (call.method.equals("scan_image")) {
             scanFile(result, filePath, EntryType.IMAGE, barcodeFormats);
+        } else if (call.method.equals("scan_camera")) {
+            Log.d("<>", "dorimé");
+            //new ReadBarcodeFromCamera();
+            //Intent intent = new Intent(null, ReadBarcodeFromCamera.class);
+            //startActivity(intent);
         } else {
             result.notImplemented();
         }

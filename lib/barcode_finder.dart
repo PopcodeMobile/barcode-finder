@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
 abstract class BarcodeFinder {
-  static const _channel = const MethodChannel('barcode_finder');
+  static const _channel = const MethodChannel('popcode.com.br/barcode_finder');
 
   static Future<String> scanFile({
     @required String path,
@@ -14,8 +14,8 @@ abstract class BarcodeFinder {
     try {
       final listFormats = _conventFormatsToList(formats);
       Map<String, dynamic> arguments = {
-        "filePath": path,
-        "barcodeFormats": listFormats,
+        'filePath': path,
+        'barcodeFormats': listFormats,
       };
       if (path.endsWith('.pdf')) {
         return _channel.invokeMethod('scan_pdf', arguments);
@@ -24,6 +24,10 @@ abstract class BarcodeFinder {
     } catch (e) {
       throw Exception();
     }
+  }
+
+  static Future<String> scanCamera() async {
+    return _channel.invokeMethod('scan_camera');
   }
 
   static List<String> _conventFormatsToList(List<BarcodeFormat> formats) {
