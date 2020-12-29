@@ -1,8 +1,8 @@
 name: barcode_finder
-description: A new flutter plugin project.
+description: Plugin for reading barcodes from files.
 version: 0.0.1
-author:
-homepage:
+author: Popcode Mobile Solutions
+homepage: https://github.com/PopcodeMobile/barcode-finder
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
