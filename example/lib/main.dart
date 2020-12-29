@@ -45,7 +45,6 @@ class _MyAppState extends State<MyApp> {
                   else if (state is BarcodeFinderSuccess)
                     _text('${state.code}'),
                   _startScanFileButton(state),
-                  _startCameraButton(state),
                 ],
               );
             },
@@ -67,13 +66,6 @@ class _MyAppState extends State<MyApp> {
               }
             }
           : null,
-    );
-  }
-
-  Widget _startCameraButton(BarcodeFinderState state) {
-    return RaisedButton(
-      child: Text('Scan using camera'),
-      onPressed: state is! BarcodeFinderLoading ? () async {} : null,
     );
   }
 

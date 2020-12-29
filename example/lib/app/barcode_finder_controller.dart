@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:barcode_finder/barcode_finder.dart';
-import 'package:barcode_finder/barcode_format.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mime/mime.dart';
 

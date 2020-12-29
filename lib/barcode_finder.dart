@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:barcode_finder/barcode_format.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
@@ -31,4 +30,24 @@ abstract class BarcodeFinder {
   static List<String> _conventFormatsToList(List<BarcodeFormat> formats) {
     return formats.map((format) => format.toString().split('.').last).toList();
   }
+}
+
+enum BarcodeFormat {
+  UPC_A,
+  UPC_E,
+  EAN_8,
+  EAN_13,
+  UPC_EAN_EXTENSION,
+  CODE_39,
+  CODE_93,
+  CODE_128,
+  CODABAR,
+  ITF,
+  QR_CODE,
+  DATA_MATRIX,
+  AZTEC,
+  PDF_417,
+  MAXICODE,
+  RSS_14,
+  RSS_EXPANDED
 }
