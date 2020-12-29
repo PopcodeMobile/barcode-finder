@@ -13,7 +13,9 @@ public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments else {
                 return
             }
-            if let filePath = args as? String{
+            if let myArgs = args as? [String: Any]{
+                let filePath = myArgs["filePath"] as! String
+                let barcodeFormats = myArgs["barcodeFormats"] as? [String]
                 let url = URL(fileURLWithPath: filePath)
                 let scanner = BarcodeScanner()
                 
@@ -24,9 +26,9 @@ public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
                             result(nil)
                             return
                         }
-                       
+                        let barcodesToFilter = BarcodeFormatType.createBarcodeFormatTypeFromStrings(strings: barcodeFormats!)
                         for uiImage in pdfImages ?? [UIImage](){
-                            let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage)
+                            let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage, barcodesToFilter: barcodesToFilter)
                             if barcode != nil {
                                 result(barcode)
                                 return;
@@ -46,7 +48,9 @@ public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
             guard let args = call.arguments else {
                 return
             }
-            if let filePath = args as? String{
+            if let myArgs = args as? [String: Any]{
+                let filePath = myArgs["filePath"] as! String
+                let barcodeFormats = myArgs["barcodeFormats"] as? [String]
                 let url = URL(fileURLWithPath: filePath)
                 let scanner = BarcodeScanner()
                 let uiImage = UIImage.init(contentsOfFile: url.path)
@@ -54,7 +58,8 @@ public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
                     result(nil)
                     return
                 }
-                let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage!)
+                let barcodesToFilter = BarcodeFormatType.createBarcodeFormatTypeFromStrings(strings: barcodeFormats!)
+                let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage!, barcodesToFilter: barcodesToFilter)
                 if barcode != nil {
                     result(barcode)
                     return;

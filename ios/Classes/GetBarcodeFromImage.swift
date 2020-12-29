@@ -7,10 +7,10 @@
 
 import Foundation
 
-func getBarcodeFromImage(uiImage: UIImage) -> String?{
+func getBarcodeFromImage(uiImage: UIImage, barcodesToFilter: [BarcodeFormatType] = [BarcodeFormatType.any]) -> String?{
     let scanners = [scanUsingZxing, scanUsingZBar]
     for scanner in scanners{
-        if let barcodeFound = scanner(uiImage){
+        if let barcodeFound = scanner(uiImage, barcodesToFilter){
             return barcodeFound
         }
     }
@@ -18,8 +18,8 @@ func getBarcodeFromImage(uiImage: UIImage) -> String?{
 }
 
 
-private func scanUsingZxing(_ image: UIImage) ->String?{
-    let result: String? = zxingScanImage(image)
+private func scanUsingZxing(_ image: UIImage, barcodesToFilter: [BarcodeFormatType]) ->String?{
+    let result: String? = zxingScanImage(image, barcodesToFilter: barcodesToFilter)
     if let barcode = result{
         if(!barcode.isEmpty){
             print("ZXing: barcode found - \(barcode)")
@@ -30,8 +30,8 @@ private func scanUsingZxing(_ image: UIImage) ->String?{
     return nil
 }
 
-private func scanUsingZBar(_ image: UIImage) ->String?{
-    let result: String? = zbarScanImage(image)
+private func scanUsingZBar(_ image: UIImage, barcodesToFilter: [BarcodeFormatType]) ->String?{
+    let result: String? = zbarScanImage(image, barcodesToFilter: barcodesToFilter)
     if let barcode = result{
         if(!barcode.isEmpty){
             print("ZBar: barcode found - \(barcode)")

@@ -10,8 +10,10 @@ import Foundation
 class BarcodeScanner {
     
     var image: UIImage?
-    func tryFindBarcodeFrom(uiImage: UIImage) -> String?{
+    var barcodesToFilter: [BarcodeFormatType]?
+    func tryFindBarcodeFrom(uiImage: UIImage, barcodesToFilter: [BarcodeFormatType] = [BarcodeFormatType.any]) -> String?{
         self.image = uiImage
+        self.barcodesToFilter = barcodesToFilter
         let rotationAttemptResult = tryRotateImage(uiImage)
         return rotationAttemptResult
         
@@ -43,17 +45,17 @@ class BarcodeScanner {
     private func decodeRotated90DegreesImage(uiImage: UIImage) ->String?{
         let rotated = uiImage.rotate(radians: .pi/2)
         self.image = rotated
-        return getBarcodeFromImage(uiImage: uiImage)
+        return getBarcodeFromImage(uiImage: uiImage, barcodesToFilter: self.barcodesToFilter!)
     }
     
     private func decodeUnmodifiedImage(uiImage: UIImage) ->String?{
-        return getBarcodeFromImage(uiImage: uiImage)
+        return getBarcodeFromImage(uiImage: uiImage, barcodesToFilter: self.barcodesToFilter!)
         
     }
     
     private func decodeCroppedPdf(uiImage: UIImage) ->String?{
         let cropped = uiImage.cropHalf()
-        return getBarcodeFromImage(uiImage: cropped)
+        return getBarcodeFromImage(uiImage: cropped, barcodesToFilter: self.barcodesToFilter!)
         
     }
     
