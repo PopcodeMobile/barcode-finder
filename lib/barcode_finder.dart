@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
 abstract class BarcodeFinder {
-  static const _channel = const MethodChannel('barcode_finder');
+  static const _channel = const MethodChannel('popcode.com.br/barcode_finder');
 
   /// If [formats] parameter is an empty list
   /// it will scan for all possible formats
