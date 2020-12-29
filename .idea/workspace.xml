@@ -2,15 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ffc4c7e-1cf0-48eb-975f-004e252a6f2d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/BarcodeFormat.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/BarcodeType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/BarcodeFinderPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/BarcodeFinderPlugin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/MethodCallHandlerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/MethodCallHandlerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/ReadBarcodeFromFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/br/com/popcode/barcode_finder/ReadBarcodeFromFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/app/barcode_finder_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/app/barcode_finder_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/barcode_finder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/barcode_finder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/barcode_format.dart" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,7 +16,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="3.2_QVGA_API_R_320x480" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="68efd260" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>

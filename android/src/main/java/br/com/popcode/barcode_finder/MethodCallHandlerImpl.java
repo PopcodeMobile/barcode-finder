@@ -23,7 +23,7 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, final @NonNull MethodChannel.Result result) {
-        HashMap<String, Object> arguments = (HashMap<String, Object>) call.arguments;
+        HashMap arguments = (HashMap) call.arguments;
         String filePath = (String) arguments.get("filePath");
         ArrayList barcodeFormats = (ArrayList) arguments.get("barcodeFormats");
         if (call.method.equals("scan_pdf")) {
