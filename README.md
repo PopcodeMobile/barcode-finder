@@ -1,16 +1,43 @@
+# Barcode Finder
 
+![pub package][version_badge]
 
-A barcode scanner that works on both iOS and Android. Provides functionality for scanning 1D and 2D barcodes.
-It uses Zxing on Android and Zxing+Zbar on iOS.
+A flutter plugin for barcode scanner that works on both iOS and Android. Provides functionality for scanning several formats of 1D and 2D barcodes.
 
----
-<img src="https://github.com/PopcodeMobile/barcode-finder/blob/feature/scan-file/example/barcodefinder.gif" width="200"/>
+It uses [Zxing](https://github.com/zxing/zxing) on Android and [Zxing](https://github.com/zxing/zxing)+[Zbar](https://github.com/ZBar/ZBar) on iOS to detect codes from PDF and Image files.
+
+![Exemple using app](https://github.com/PopcodeMobile/barcode-finder/blob/feature/scan-file/example/barcodefinder.gif)
+
+## Getting Started
+
+###  Depend on it
+
+Add this to your package's pubspec.yaml file:
+```yaml
+dependencies:
+  barcode_finder: last version
+```
+### Android Platform
+
+API 21 is the minimum supported for Android.
 
 ## Usage
 
-Lets take a look at how to use `BarcodeFinder` to scan any PDF or image `File`.
+Lets take a look at how to use `BarcodeFinder` to scan any `PDF` or image `File` using [File Picker](https://pub.dev/packages/file_picker) as a auxiliar plugin.
+
 ```dart
-// File file = ... 
-final String barcode =  await _barcodeFinder.scanFile(filePath: file.path);
+Future<String> scanFile() async {
+    // Used to pick a file from device storage
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+    if(result != null) {
+        String path = result.files.single.path;
+        String barcode = await BarcodeFinder.scanFile(path: path);
+        return barcode;
+    } else {
+        // User canceled the picker
+        return null;
+    }
+}
 ```
 
+Make sure you have to pass a valid and permissioned path to `BarcodeFinder.scanFile`, in exemple above File Picker do it for us.
