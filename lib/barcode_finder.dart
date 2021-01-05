@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 
 abstract class BarcodeFinder {
   static const _channel = const MethodChannel('popcode.com.br/barcode_finder');
