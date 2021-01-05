@@ -13,7 +13,7 @@ It uses [Zxing](https://github.com/zxing/zxing) on Android and [Zxing](https://g
 Add this to your package's pubspec.yaml file:
 ```yaml
 dependencies:
-  barcode_finder: last version
+  barcode_finder: latest version
 ```
 ### Android Platform
 
@@ -38,4 +38,4 @@ Future<String> scanFile() async {
 }
 ```
 
-Make sure you have to pass a valid and permissioned path to `BarcodeFinder.scanFile`, in exemple above File Picker do it for us.
+Make sure you are passing a valid and permissioned path to `BarcodeFinder.scanFile`, in the exemple above, the package FilePicker provides it for us.
