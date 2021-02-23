@@ -1,14 +1,17 @@
+import 'package:barcode_finder/barcode_finder.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('barcode_finder');
+  const MethodChannel channel = MethodChannel('popcode.com.br/barcode_finder');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  final tCode = '40020922';
+
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
+      return tCode;
     });
   });
 
@@ -16,7 +19,7 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    //expect(await BarcodeFinder.platformVersion, '42');
+  test('scanFile', () async {
+    expect(await BarcodeFinder.scanFile(path: ''), tCode);
   });
 }
