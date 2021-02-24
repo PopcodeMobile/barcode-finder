@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.LuminanceSource;
@@ -24,7 +23,6 @@ import com.shockwave.pdfium.PdfiumCore;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.Map;
 
 public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
@@ -36,8 +34,8 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
     private final Uri filePath;
     private boolean outOfMemoryError = false;
     private final OnBarcodeReceivedListener listener;
-    private EntryType entryType;
-    private ArrayList barcodeFormats;
+    private final EntryType entryType;
+    private final ArrayList barcodeFormats;
 
     ReadBarcodeFromFile(OnBarcodeReceivedListener listener, Context context, Uri filePath, EntryType entryType, ArrayList barcodeFormats) {
         this.listener = listener;
@@ -48,7 +46,8 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected void onPreExecute() {}
+    protected void onPreExecute() {
+    }
 
     @Override
     protected String doInBackground(Void... voids) {
@@ -96,16 +95,14 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
             pdfiumCore.openPage(pdfDocument, numeroPagina);
             int width = pdfiumCore.getPageWidthPoint(pdfDocument, numeroPagina) * tryNumber;
             int height = pdfiumCore.getPageHeightPoint(pdfDocument, numeroPagina) * tryNumber;
-            try {
-                Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                pdfiumCore.renderPageBitmap(pdfDocument, bmp, numeroPagina, 0, 0, width, height);
-                pdfiumCore.closeDocument(pdfDocument);
-                return bmp;
-            } catch (OutOfMemoryError e) {
-                Log.e("BarcodeTest", "Error Out of memory", e);
-                outOfMemoryError = true;
-                return null;
-            }
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            pdfiumCore.renderPageBitmap(pdfDocument, bmp, numeroPagina, 0, 0, width, height);
+            pdfiumCore.closeDocument(pdfDocument);
+            return bmp;
+        } catch (OutOfMemoryError e) {
+            Log.e("BarcodeTest", "Error Out of memory", e);
+            outOfMemoryError = true;
+            return null;
         } catch (Exception e) {
             Log.e("Bitmap PDF", e.getMessage());
         }
@@ -120,23 +117,19 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                 bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
                 LuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-                try {
-                    Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
-                    hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-                    hints.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.allOf(BarcodeFormat.class));
-                    hints.put(DecodeHintType.PURE_BARCODE, Boolean.FALSE);
-                    Result result = reader.decode(bitmap, hints);
-                    if (barcodeFormats.isEmpty() || barcodeFormats.contains(result.getBarcodeFormat().toString())) {
-                        contents = result.getText();
-                    }
-                } catch (Exception e) {
-                    Log.e("BarcodeTest", "Error decoding barcode", e);
+                Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
+                hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+                Result result = reader.decode(bitmap, hints);
+                if (this.barcodeFormats.isEmpty() || this.barcodeFormats.contains(result.getBarcodeFormat().toString())) {
+                    contents = result.getText();
                 }
             }
         } catch (OutOfMemoryError e) {
             Log.e("BarcodeTest", "Error Out of memory", e);
             outOfMemoryError = true;
             return null;
+        } catch (Exception e) {
+            Log.e("BarcodeTest", "Error decoding barcode", e);
         }
         return contents;
     }
