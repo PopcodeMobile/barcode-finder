@@ -11,6 +11,7 @@ public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if(call.method == "scan_pdf") {
             guard let args = call.arguments else {
+                result(FlutterError(code: "no-arguments", message: "No arguments provided", details: nil))
                 return
             }
             if let myArgs = args as? [String: Any]{
@@ -23,29 +24,31 @@ public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
                     let pdfImages = url.pdfPagesToImages()
                     DispatchQueue.main.async {
                         if pdfImages == nil{
-                            result(nil)
+                            result(FlutterError(code: "not-found" , message: "No barcode found on the file", details: nil))
                             return
                         }
                         let barcodesToFilter = BarcodeFormatType.createBarcodeFormatTypeFromStrings(strings: barcodeFormats!)
                         for uiImage in pdfImages ?? [UIImage](){
-                            let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage, barcodesToFilter: barcodesToFilter)
-                            if barcode != nil {
+                            if let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage, barcodesToFilter: barcodesToFilter){
                                 result(barcode)
                                 return;
                             }
                         }
                         
-                        result(nil)
+                        result(FlutterError(code: "not-found" , message: "No barcode found on the file", details: nil))
+                        return
                     }
                 }
                 
                 
             } else {
-                result(nil)
+                result(FlutterError(code: "no-arguments", message: "No arguments provided", details: nil))
+                return
             }
         }
         if(call.method == "scan_image") {
             guard let args = call.arguments else {
+                result(FlutterMethodNotImplemented)
                 return
             }
             if let myArgs = args as? [String: Any]{
@@ -55,19 +58,22 @@ public class SwiftBarcodeFinderPlugin: NSObject, FlutterPlugin {
                 let scanner = BarcodeScanner()
                 let uiImage = UIImage.init(contentsOfFile: url.path)
                 if uiImage == nil{
-                    result(nil)
+                    result(FlutterError(code: "not-found" , message: "No barcode found on the file", details: nil))
                     return
                 }
                 let barcodesToFilter = BarcodeFormatType.createBarcodeFormatTypeFromStrings(strings: barcodeFormats!)
-                let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage!, barcodesToFilter: barcodesToFilter)
-                if barcode != nil {
+                if let barcode =  scanner.tryFindBarcodeFrom(uiImage: uiImage!, barcodesToFilter: barcodesToFilter){
                     result(barcode)
                     return;
                 }
-                result(nil)
+                result(FlutterError(code: "not-found" , message: "No barcode found on the file", details: nil))
+                return
             } else {
-                result(nil)
+                result(FlutterError(code: "no-arguments", message: "No arguments provided", details: nil))
+
             }
         }
     }
+    
+    
 }
