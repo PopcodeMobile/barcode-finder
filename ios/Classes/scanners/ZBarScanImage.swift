@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ZBarSDK
+import ATBarSDK
 
 func zbarScanImage(_ image: UIImage, barcodesToFilter: [BarcodeFormatType]) -> String?{
     let reader = ZBarReaderController()
