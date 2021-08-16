@@ -41,9 +41,13 @@ class _MyAppState extends State<MyApp> {
                   if (state is BarcodeFinderLoading)
                     _loading()
                   else if (state is BarcodeFinderError)
-                    _text('${state.message}')
+                    _text(
+                      '${state.message}',
+                    )
                   else if (state is BarcodeFinderSuccess)
-                    _text('${state.code}'),
+                    _text(
+                      '${state.code}',
+                    ),
                   _startScanFileButton(state),
                 ],
               );
@@ -55,14 +59,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _startScanFileButton(BarcodeFinderState state) {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text('Scan PDF or image file'),
       onPressed: state is! BarcodeFinderLoading
           ? () async {
-              final result = await FilePicker.platform.pickFiles();
-              if (result != null) {
-                final file = File(result.files.single.path);
-                controller.scanFile(file);
+              final pickedFile = await FilePicker.platform.pickFiles();
+              if (pickedFile != null) {
+                final filePath = pickedFile.files.single.path;
+                if (filePath != null) {
+                  final file = File(filePath);
+                  controller.scanFile(file);
+                }
               }
             }
           : null,
