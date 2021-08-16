@@ -46,6 +46,10 @@ class BarcodeFinderController extends ChangeNotifier {
       _emit(
         BarcodeFinderSuccess(barcode),
       );
+    } else {
+      _emit(
+        BarcodeFinderError('Not Found'),
+      );
     }
   }
 }

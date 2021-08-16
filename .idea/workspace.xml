@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ffc4c7e-1cf0-48eb-975f-004e252a6f2d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/example/test/app/barcode_finder_controller_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/app/barcode_finder_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/app/barcode_finder_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/test/widget_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +80,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629131536489</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="cleaning pubspec.yaml file">
+      <created>1629135372418</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1629135372418</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -103,6 +104,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="migrate package to null safety" />
-    <option name="LAST_COMMIT_MESSAGE" value="migrate package to null safety" />
+    <MESSAGE value="cleaning pubspec.yaml file" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleaning pubspec.yaml file" />
   </component>
 </project>
