@@ -4,7 +4,7 @@ A flutter plugin for barcode scanner that works on both iOS and Android. Provide
 
 It uses [Zxing](https://github.com/zxing/zxing) on Android and [Zxing](https://github.com/zxing/zxing)+[Zbar](https://github.com/ZBar/ZBar) on iOS to detect codes from PDF and Image files.
 
-<img src="https://github.com/PopcodeMobile/barcode-finder/blob/feature/scan-file/example/sample.gif" width="300" alt="Example using app"/>
+<img src="https://github.com/PopcodeMobile/barcode-finder/blob/main/example/sample.gif" width="300" alt="Example using app"/>
 
 ## Getting Started
 
