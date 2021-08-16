@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 abstract class BarcodeFinder {
@@ -8,15 +5,15 @@ abstract class BarcodeFinder {
 
   /// If [formats] parameter is an empty list
   /// it will scan for all possible formats
-  static Future<String> scanFile({
-    @required String path,
+  static Future<String?> scanFile({
+    required String path,
     List<BarcodeFormat> formats = const [],
   }) async {
     try {
       final listFormats = _conventFormatsToList(formats);
       Map<String, dynamic> arguments = {
-        "filePath": path,
-        "barcodeFormats": listFormats,
+        'filePath': path,
+        'barcodeFormats': listFormats,
       };
       if (path.endsWith('.pdf')) {
         return _channel.invokeMethod('scan_pdf', arguments);
@@ -49,5 +46,5 @@ enum BarcodeFormat {
   PDF_417,
   MAXICODE,
   RSS_14,
-  RSS_EXPANDED
+  RSS_EXPANDED,
 }
