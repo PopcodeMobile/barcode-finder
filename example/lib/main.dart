@@ -63,9 +63,10 @@ class _MyAppState extends State<MyApp> {
       child: Text('Scan PDF or image file'),
       onPressed: state is! BarcodeFinderLoading
           ? () async {
-              final pickedFile = await FilePicker.platform.pickFiles();
+              FilePickerResult? pickedFile =
+                  await FilePicker.platform.pickFiles();
               if (pickedFile != null) {
-                final filePath = pickedFile.files.single.path;
+                String? filePath = pickedFile.files.single.path;
                 if (filePath != null) {
                   final file = File(filePath);
                   controller.scanFile(file);
