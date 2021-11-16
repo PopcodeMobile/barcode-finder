@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Update the process to convert pdf to image on iOS
+
 ## 0.0.2
 
 * Updates documentation and sample application.
