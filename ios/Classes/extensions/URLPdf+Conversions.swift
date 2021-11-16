@@ -31,7 +31,9 @@ extension URL {
         }
         let pageRect = pdfPage!.getBoxRect(.mediaBox)
 
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: pageRect.size.width * scale, height: pageRect.size.height * scale))
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: pageRect.size.width * scale, height: pageRect.size.height * scale), format:format)
         let img = renderer.jpegData(withCompressionQuality: 1.0 ,actions: { cnv in
             cnv.cgContext.saveGState()
             UIColor.white.set()
