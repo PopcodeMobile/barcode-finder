@@ -28,6 +28,7 @@ import java.util.Map;
 public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
 
     private static final int NUMBER_OF_ATTEMPTS = 4;
+    private static final double PORCENTAGEM_ESCALA = 0.05;
 
     @SuppressLint("StaticFieldLeak")
     private final Context context;
@@ -49,6 +50,13 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
     protected void onPreExecute() {
     }
 
+    private Bitmap resizeImage(Bitmap bitmap, int tryNumber){
+        int width = (int) (bitmap.getWidth() * (1-tryNumber * PORCENTAGEM_ESCALA));
+        int height = (int) (bitmap.getHeight() * (1-tryNumber * PORCENTAGEM_ESCALA));
+        bitmap = Bitmap.createScaledBitmap(bitmap, width,height, false);
+        return bitmap;
+    }
+
     @Override
     protected String doInBackground(Void... voids) {
         if (filePath != null) {
@@ -59,6 +67,7 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                     bitmap = generateImageFromPdf(filePath, 0, tryNumber);
                 } else {
                     bitmap = BitmapFactory.decodeFile(filePath.getPath());
+                    bitmap = resizeImage(bitmap, tryNumber);
                 }
                 if (bitmap != null) {
                     String code = scanImage(bitmap, new MultiFormatReader());

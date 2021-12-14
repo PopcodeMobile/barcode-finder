@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Update the process to resize image.
+
 ## 0.0.3
 
 * Update the process to convert pdf to image on iOS
