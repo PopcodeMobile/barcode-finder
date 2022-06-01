@@ -1,4 +1,4 @@
-package br.com.popcode.barcode_finder_example
+package br.com.popcode.example
 
 import io.flutter.embedding.android.FlutterActivity
 

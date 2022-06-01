@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Upgrade `zxing-android-embedded` to 4.3.0
+
 ## 0.0.4
 
 * Update the process to resize image.
