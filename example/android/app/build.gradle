@@ -43,6 +43,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        namespace 'br.com.popcode.example'
         applicationId "br.com.popcode.example"
         minSdkVersion 21
         targetSdkVersion 30

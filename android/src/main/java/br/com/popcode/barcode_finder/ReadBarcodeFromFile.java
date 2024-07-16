@@ -10,20 +10,17 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Reader;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.common.InputImage;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.List;
 
 public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
 
@@ -70,7 +67,7 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                     bitmap = resizeImage(bitmap, tryNumber);
                 }
                 if (bitmap != null) {
-                    String code = scanImage(bitmap, new MultiFormatReader());
+                    String code = scanImage(bitmap);
                     if (code != null && !code.isEmpty()) {
                         return code;
                     }
@@ -118,19 +115,35 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
         return null;
     }
 
-    private String scanImage(Bitmap bMap, Reader reader) {
-        String contents = null;
+    private String scanImage(Bitmap bMap) {
         try {
             if (!outOfMemoryError) {
-                int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
-                bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
-                LuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
-                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-                Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
-                hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-                Result result = reader.decode(bitmap, hints);
-                if (this.barcodeFormats.isEmpty() || this.barcodeFormats.contains(result.getBarcodeFormat().toString())) {
-                    contents = result.getText();
+                InputImage image = InputImage.fromBitmap(bMap, 0);
+                BarcodeScannerOptions options =
+                        new BarcodeScannerOptions.Builder()
+                                .enableAllPotentialBarcodes() // Optional
+                        .build();
+                BarcodeScanner scanner = BarcodeScanning.getClient(options);
+                Task<List<Barcode>> result =  scanner.process(image)
+                        .addOnSuccessListener(barcodes -> {
+                            if(!barcodes.isEmpty()){
+                                for (Barcode b: barcodes) {
+                                    Log.d("BarcodeTest", "Barcode: "+b.getRawValue());
+                                }
+                            }else{
+                                Log.d("BarcodeTest", "Barcode not found");
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("BarcodeTest", "Error Out of memory", e);
+                        });
+                while (!result.isComplete()){
+                    Log.d("BarcodeTest", "Processing image...");
+                }
+                List<Barcode> barcodes = result.getResult();
+                if (!barcodes.isEmpty() && (barcodeFormats.isEmpty() ||
+                        barcodeFormats.contains(barcodes.get(0).getFormat()))){
+                    return barcodes.get(0).getRawValue();
                 }
             }
         } catch (OutOfMemoryError e) {
@@ -140,6 +153,6 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
         } catch (Exception e) {
             Log.e("BarcodeTest", "Error decoding barcode", e);
         }
-        return contents;
+        return "";
     }
 }
