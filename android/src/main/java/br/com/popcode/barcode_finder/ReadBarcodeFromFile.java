@@ -5,11 +5,17 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
@@ -117,32 +123,38 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
 
     private String scanImage(Bitmap bMap) {
         try {
-            if (!outOfMemoryError) {
-                InputImage image = InputImage.fromBitmap(bMap, 0);
+            if (!outOfMemoryError) {;
                 BarcodeScannerOptions options =
                         new BarcodeScannerOptions.Builder()
                                 .enableAllPotentialBarcodes() // Optional
                         .build();
                 BarcodeScanner scanner = BarcodeScanning.getClient(options);
+                Bitmap bmp = toGrayscale(bMap);
+                InputImage image = InputImage.fromBitmap(bmp, 0);
                 Task<List<Barcode>> result =  scanner.process(image)
-                        .addOnSuccessListener(barcodes -> {
-                            if(!barcodes.isEmpty()){
-                                for (Barcode b: barcodes) {
-                                    Log.d("BarcodeTest", "Barcode: "+b.getRawValue());
+                        .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                            @Override
+                            public void onSuccess(List<Barcode> barcodes) {
+                                if (!barcodes.isEmpty()) {
+                                    for (Barcode b : barcodes) {
+                                        Log.d("BarcodeTest", "Barcode: " + b.getRawValue());
+                                    }
+                                } else {
+                                    Log.d("BarcodeTest", "Barcode not found");
                                 }
-                            }else{
-                                Log.d("BarcodeTest", "Barcode not found");
                             }
                         })
-                        .addOnFailureListener(e -> {
-                            Log.e("BarcodeTest", "Error Out of memory", e);
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("BarcodeTest", "Error Out of memory", e);
+                            }
                         });
                 while (!result.isComplete()){
                     Log.d("BarcodeTest", "Processing image...");
                 }
                 List<Barcode> barcodes = result.getResult();
-                if (!barcodes.isEmpty() && (barcodeFormats.isEmpty() ||
-                        barcodeFormats.contains(barcodes.get(0).getFormat()))){
+                if (!barcodes.isEmpty()){
                     return barcodes.get(0).getRawValue();
                 }
             }
@@ -154,5 +166,22 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
             Log.e("BarcodeTest", "Error decoding barcode", e);
         }
         return "";
+    }
+
+    public Bitmap toGrayscale(Bitmap bmpOriginal)
+    {
+        int width, height;
+        height = bmpOriginal.getHeight();
+        width = bmpOriginal.getWidth();
+        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        cm.setYUV2RGB();
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(bmpOriginal, 0, 0, paint);
+        return bmpGrayscale;
     }
 }
