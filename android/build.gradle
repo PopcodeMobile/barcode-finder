@@ -4,27 +4,34 @@ version '1.0'
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        maven {
+            url ("https://jcenter.bintray.com")
+        }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
 
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        maven {
+            url ("https://jcenter.bintray.com")
+        }
     }
 }
 
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
+        namespace 'br.com.popcode.barcode_finder'
         minSdkVersion 21
     }
     lintOptions {
@@ -33,7 +40,6 @@ android {
 }
 
 dependencies {
-    implementation('com.journeyapps:zxing-android-embedded:4.3.0') { transitive = false }
-    implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+    implementation 'com.google.mlkit:barcode-scanning:17.2.0'
 }

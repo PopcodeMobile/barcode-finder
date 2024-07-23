@@ -1,6 +1,6 @@
 name: barcode_finder
-description: Barcode Finder is a plugin for reading barcodes and QRCodes from pdf files and images using Zxing for Android and Zxing and Zbar for iOS
-version: 0.0.5
+description: Barcode Finder is a plugin for reading barcodes and QRCodes from pdf files and images using ML kit for Android and iOS
+version: 0.0.6
 homepage: https://github.com/PopcodeMobile/barcode-finder
 
 environment:

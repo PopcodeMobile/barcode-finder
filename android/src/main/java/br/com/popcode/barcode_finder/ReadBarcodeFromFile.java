@@ -5,25 +5,25 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Reader;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.common.InputImage;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.List;
 
 public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
 
@@ -38,16 +38,17 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
     private final EntryType entryType;
     private final ArrayList barcodeFormats;
 
-    ReadBarcodeFromFile(OnBarcodeReceivedListener listener, Context context, Uri filePath, EntryType entryType, ArrayList barcodeFormats) {
+    ReadBarcodeFromFile(OnBarcodeReceivedListener listener,
+                        Context context,
+                        Uri filePath,
+                        EntryType entryType,
+                        ArrayList barcodeFormats
+    ) {
         this.listener = listener;
         this.context = context;
         this.filePath = filePath;
         this.entryType = entryType;
         this.barcodeFormats = barcodeFormats;
-    }
-
-    @Override
-    protected void onPreExecute() {
     }
 
     private Bitmap resizeImage(Bitmap bitmap, int tryNumber){
@@ -70,7 +71,7 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
                     bitmap = resizeImage(bitmap, tryNumber);
                 }
                 if (bitmap != null) {
-                    String code = scanImage(bitmap, new MultiFormatReader());
+                    String code = scanImage(bitmap);
                     if (code != null && !code.isEmpty()) {
                         return code;
                     }
@@ -99,13 +100,15 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
         try {
             ParcelFileDescriptor parcelFileDescriptor;
             ContentResolver contentResolver = context.getApplicationContext().getContentResolver();
-            parcelFileDescriptor = contentResolver.openFileDescriptor(assetFileName, "r", null);
+            parcelFileDescriptor = contentResolver.openFileDescriptor(assetFileName, "r",
+                    null);
             PdfDocument pdfDocument = pdfiumCore.newDocument(parcelFileDescriptor);
             pdfiumCore.openPage(pdfDocument, numeroPagina);
             int width = pdfiumCore.getPageWidthPoint(pdfDocument, numeroPagina) * tryNumber;
             int height = pdfiumCore.getPageHeightPoint(pdfDocument, numeroPagina) * tryNumber;
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            pdfiumCore.renderPageBitmap(pdfDocument, bmp, numeroPagina, 0, 0, width, height);
+            pdfiumCore.renderPageBitmap(pdfDocument, bmp, numeroPagina, 0, 0, width,
+                    height);
             pdfiumCore.closeDocument(pdfDocument);
             return bmp;
         } catch (OutOfMemoryError e) {
@@ -118,19 +121,35 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
         return null;
     }
 
-    private String scanImage(Bitmap bMap, Reader reader) {
-        String contents = null;
+    private String scanImage(Bitmap bMap) {
         try {
-            if (!outOfMemoryError) {
-                int[] intArray = new int[bMap.getWidth() * bMap.getHeight()];
-                bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
-                LuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
-                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-                Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
-                hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-                Result result = reader.decode(bitmap, hints);
-                if (this.barcodeFormats.isEmpty() || this.barcodeFormats.contains(result.getBarcodeFormat().toString())) {
-                    contents = result.getText();
+            if (!outOfMemoryError) {;
+                BarcodeScannerOptions options =
+                        new BarcodeScannerOptions.Builder()
+                                .enableAllPotentialBarcodes()
+                        .build();
+                BarcodeScanner scanner = BarcodeScanning.getClient(options);
+                Bitmap bmp = toGrayscale(bMap);
+                InputImage image = InputImage.fromBitmap(bmp, 0);
+                Task<List<Barcode>> result =  scanner.process(image)
+                        .addOnSuccessListener(barcodes -> {
+                            if (!barcodes.isEmpty()) {
+                                for (Barcode b : barcodes) {
+                                    Log.d("BarcodeTest", "Barcode: " + b.getRawValue());
+                                }
+                            } else {
+                                Log.d("BarcodeTest", "Barcode not found");
+                            }
+                        })
+                        .addOnFailureListener(e -> Log.e("BarcodeTest",
+                                "Error decoding barcode", e));
+                while (!result.isComplete()){
+                    Log.d("BarcodeTest", "Processing image...");
+                }
+                List<Barcode> barcodes = result.getResult();
+                if (!barcodes.isEmpty() && (barcodeFormats.isEmpty()
+                        || existBarcodeType(barcodes.get(0).getFormat()))){
+                    return barcodes.get(0).getRawValue();
                 }
             }
         } catch (OutOfMemoryError e) {
@@ -140,6 +159,35 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
         } catch (Exception e) {
             Log.e("BarcodeTest", "Error decoding barcode", e);
         }
-        return contents;
+        return "";
+    }
+
+    private boolean existBarcodeType(int format){
+        for(Object f: barcodeFormats){
+            BarcodeType barcodeType = BarcodeType.findType(f.toString());
+            if (barcodeType != null && barcodeType.code == format) {
+                Log.d("BarcodeTest", "Barcode type is: "+barcodeType.name());
+                return true;
+            }
+        }
+        Log.d("BarcodeTest", "Barcode type not found on list");
+        return false;
+    }
+
+    private Bitmap toGrayscale(Bitmap bmpOriginal)
+    {
+        int width, height;
+        height = bmpOriginal.getHeight();
+        width = bmpOriginal.getWidth();
+        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        cm.setYUV2RGB();
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(bmpOriginal, 0, 0, paint);
+        return bmpGrayscale;
     }
 }

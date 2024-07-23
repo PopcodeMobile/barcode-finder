@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import MLKit
 
-func getBarcodeFromImage(uiImage: UIImage, barcodesToFilter: [BarcodeFormatType] = [BarcodeFormatType.any]) -> String?{
-    let scanners = [scanUsingZxing, scanUsingZBar]
+func getBarcodeFromImage(uiImage: UIImage, barcodesToFilter: [BarcodeFormat] = [BarcodeFormat.all]) -> String?{
+    let scanners = [scanMlKit]
     for scanner in scanners{
         if let barcodeFound = scanner(uiImage, barcodesToFilter){
             return barcodeFound
@@ -17,24 +18,17 @@ func getBarcodeFromImage(uiImage: UIImage, barcodesToFilter: [BarcodeFormatType]
     return nil
 }
 
+private func scanMlKit(_ image: UIImage, barcodesToFilter: [BarcodeFormat]) ->String?{
+    let barcodeOptions = BarcodeScannerOptions(formats: barcodesToFilter)
+    let barcodeScanner = BarcodeScanner.barcodeScanner(options: barcodeOptions)
 
-private func scanUsingZxing(_ image: UIImage, barcodesToFilter: [BarcodeFormatType]) ->String?{
-    let result: String? = zxingScanImage(image, barcodesToFilter: barcodesToFilter)
-    if let barcode = result{
-        if(!barcode.isEmpty){
-            return barcode
-        }
+    let image = VisionImage(image: image)
+    visionImage.orientation = image.imageOrientation
+
+    barcodeScanner.process(image){features, error in
+          guard error == nil, let features = features, !features.isEmpty else {
+             return
+          }
+          return features[0].rawValue
     }
-    return nil
 }
-
-private func scanUsingZBar(_ image: UIImage, barcodesToFilter: [BarcodeFormatType]) ->String?{
-    let result: String? = zbarScanImage(image, barcodesToFilter: barcodesToFilter)
-    if let barcode = result{
-        if(!barcode.isEmpty){
-            return barcode
-        }
-    }
-    return nil
-}
-
