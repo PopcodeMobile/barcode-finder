@@ -1,3 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="br.com.popcode.barcode_finder">
+    package="br.com.popcode.example">
+
 </manifest>
