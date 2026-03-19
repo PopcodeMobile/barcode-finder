@@ -35,5 +35,4 @@ android {
 
 dependencies {
     implementation 'com.google.mlkit:barcode-scanning:17.3.0'
-    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 }

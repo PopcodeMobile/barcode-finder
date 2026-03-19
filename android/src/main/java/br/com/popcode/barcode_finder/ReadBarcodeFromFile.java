@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
@@ -19,8 +20,6 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
-import com.shockwave.pdfium.PdfDocument;
-import com.shockwave.pdfium.PdfiumCore;
 import java.util.List;
 
 public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
@@ -94,20 +93,17 @@ public class ReadBarcodeFromFile extends AsyncTask<Void, Void, String> {
     }
 
     private Bitmap generateImageFromPdf(Uri assetFileName, int tryNumber) {
-        PdfiumCore pdfiumCore = new PdfiumCore(context);
         try {
-            ParcelFileDescriptor parcelFileDescriptor;
             ContentResolver contentResolver = context.getApplicationContext().getContentResolver();
-            parcelFileDescriptor = contentResolver.openFileDescriptor(assetFileName, "r",
-                    null);
-            PdfDocument pdfDocument = pdfiumCore.newDocument(parcelFileDescriptor);
-            pdfiumCore.openPage(pdfDocument, 0);
-            int width = pdfiumCore.getPageWidthPoint(pdfDocument, 0) * tryNumber;
-            int height = pdfiumCore.getPageHeightPoint(pdfDocument, 0) * tryNumber;
+            ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(assetFileName, "r", null);
+            PdfRenderer renderer = new PdfRenderer(parcelFileDescriptor);
+            PdfRenderer.Page page = renderer.openPage(0);
+            int width = page.getWidth() * tryNumber;
+            int height = page.getHeight() * tryNumber;
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            pdfiumCore.renderPageBitmap(pdfDocument, bmp, 0, 0, 0, width,
-                    height);
-            pdfiumCore.closeDocument(pdfDocument);
+            page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+            page.close();
+            renderer.close();
             return bmp;
         } catch (OutOfMemoryError e) {
             Log.e("BarcodeTest", "Error Out of memory", e);
